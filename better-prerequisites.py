@@ -32,7 +32,8 @@ for i in range(17):
 # print(test_course_list[0].find(class_='views-field views-field-field-prerequisite').text)
 
 for i in range(17):
-    course_cards.extend(course_page_html_dict['course_page' + str(i)].find_all('div', class_='views-row'))
+    course_cards.extend(
+        course_page_html_dict['course_page' + str(i)].find_all('div', class_='views-row'))
 
 del course_cards[1::2]
 
@@ -41,15 +42,23 @@ for course_big in course_cards:
     course_name = course_name.replace(" ", "")
     course_name = course_name[0:6]
     try:
-        course_prerequisite_raw = str(course_big.find(class_='views-field views-field-field-prerequisite').text)
+        course_prerequisite_raw = str(
+            course_big.find(class_='views-field views-field-field-prerequisite').text)
     except AttributeError:
         continue
-    course_prerequisite_raw = course_prerequisite_raw.replace('Prerequisite: ', '')
-    course_prerequisite_raw = course_prerequisite_raw.split(', ')
+    course_prerequisite_raw = course_prerequisite_raw.replace('Prerequisite:', '')
+    course_prerequisite_raw = course_prerequisite_raw.replace(" ", "")
+    course_prerequisite_raw = course_prerequisite_raw.replace("/", ",")
+    course_prerequisite_raw = course_prerequisite_raw.replace("(", "")
+    course_prerequisite_raw = course_prerequisite_raw.replace(")", "")
+    course_prerequisite_raw = course_prerequisite_raw.replace("[", "")
+    course_prerequisite_raw = course_prerequisite_raw.replace("]", "")
+    course_prerequisite_raw = course_prerequisite_raw.split(',')
     course_prerequisite = []
     for course in course_prerequisite_raw:
         course_prerequisite.append(course[0:6])
-    course_cards_dict[course_name] = course_prerequisite        # Now I have a dictionary of all the courses and their prerequisites (list of strings)
+    course_cards_dict[
+        course_name] = course_prerequisite  # Now I have a dictionary of all the courses and their prerequisites (list of strings)
 
 for course in course_cards_dict:
     if target_course in course_cards_dict[course]:
